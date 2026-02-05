@@ -1,0 +1,67 @@
+name: Build, publish and deploy to TEST MonsterASP.NET
+on:
+  push:
+    branches: [ release ]
+
+jobs:
+  build_and_deploy:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+    #   - name: Use the version string
+    #     run: |
+    #       echo "Version from previous step: ${{ steps.version.outputs.version }}"
+    #     shell: pwsh
+
+      - name: Replace connection string in appsettings.Production.json
+        shell: pwsh
+        run: |
+          $path = "src\Sospy.Server\appsettings.json"
+          $content = Get-Content $path -Raw
+          $connectionString = "${{ secrets.MY_DATABASE_STRING }}"
+          $updated = $content -replace "MY_DATABASE_STRING", $connectionString
+          $audience = "${{ secrets.JWT_AUDIENCE }}"
+          $updated = $updated -replace "JWT_ISSUER", $audience
+          $updated = $updated -replace "JWT_AUDIENCE", $audience
+          $key = "${{ secrets.JWT_KEY }}"
+          $updated = $updated -replace "JWT_KEY", $key
+          Set-Content $path -Value $updated -Encoding UTF8
+          
+      - name: Install dependencies
+        run: dotnet restore
+        
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+      - name: Get short SHA and create version string
+        id: version
+        shell: pwsh
+        run: |
+          $shortSha = (git rev-parse --short HEAD)
+          $runNumber = $env:GITHUB_RUN_NUMBER
+          $version = "0.1.0+$runNumber.$shortSha"
+          $FileVersion = "0.1.0.${{ github.run_number }}"
+          $BuildVersion = "0.1.0.${{ github.run_number }}-$shortSha"
+          echo "Short SHA: $shortSha"
+          echo "Version: $version"
+          echo "FileVersion: $FileVersion"
+          echo "BuildVersion: $BuildVersion"
+          echo "version=$version" >> $env:GITHUB_OUTPUT
+          echo "FileVersion=$FileVersion" >> $env:GITHUB_OUTPUT
+          echo "BuildVersion=$BuildVersion" >> $env:GITHUB_OUTPUT
+
+      - name: Publish
+        run: dotnet publish --configuration Release --output ./publish --runtime win-x86 --p:Version="${{ steps.version.outputs.BuildVersion }}" --p:FileVersion="${{ steps.version.outputs.BuildVersion }}"
+
+      - name: Deploy to MonsterASP.NET via WebDeploy
+        uses: rasmusbuchholdt/simply-web-deploy@2.1.0
+        with:
+          website-name: ${{ secrets.WEBSITE_NAME }}
+          server-computer-name: ${{ secrets.SERVER_NAME }}
+          server-username: ${{ secrets.SERVER_USERNAME }}
+          server-password: ${{ secrets.SERVER_PASSWORD }}
