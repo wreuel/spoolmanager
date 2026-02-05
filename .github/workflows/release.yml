@@ -22,7 +22,7 @@ jobs:
       - name: Replace connection string in appsettings.Production.json
         shell: pwsh
         run: |
-          $path = "src\Sospy.Server\appsettings.json"
+          $path = "src\SpoolManager.Server\appsettings.json"
           $content = Get-Content $path -Raw
           $connectionString = "${{ secrets.MY_DATABASE_STRING }}"
           $updated = $content -replace "MY_DATABASE_STRING", $connectionString
