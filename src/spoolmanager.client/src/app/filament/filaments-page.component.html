@@ -1,0 +1,16 @@
+<section class="filaments-page">
+  <app-breadcrumb [items]="breadcrumbItems"></app-breadcrumb>
+
+  <header class="filaments-page__header">
+    <div>
+      <p class="filaments-page__eyebrow">Filament Types</p>
+      <h1>Filaments</h1>
+      <p>Manage all combinations of materials, colors, and parameters in one place.</p>
+    </div>
+    <div class="filaments-page__actions">
+      <a routerLink="/filaments/add" class="filaments-page__action filaments-page__action--primary">Add filament</a>
+    </div>
+  </header>
+
+  <app-filament-list></app-filament-list>
+</section>

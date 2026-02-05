@@ -1,0 +1,64 @@
+.filament-add-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.filament-add-page__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.75rem 2rem;
+  border-radius: 1.1rem;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--color-primary), var(--color-panel) 65%), var(--color-panel));
+  box-shadow: var(--color-shadow);
+  border: 1px solid var(--color-border);
+}
+
+.filament-add-page__eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  font-size: 0.7rem;
+  color: var(--color-primary);
+  margin: 0 0 0.4rem;
+}
+
+.filament-add-page__header h1 {
+  margin: 0 0 0.4rem;
+  color: var(--color-text);
+}
+
+.filament-add-page__header p {
+  margin: 0;
+  color: var(--color-text-muted);
+  max-width: 38rem;
+}
+
+.filament-add-page__back {
+  border-radius: 999px;
+  border: 1px solid var(--button-ghost-border);
+  padding: 0.6rem 1.25rem;
+  font-weight: 600;
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.filament-add-page__card {
+  background: transparent;
+}
+
+@media (max-width: 768px) {
+  .filament-add-page__header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filament-add-page__back {
+    justify-content: center;
+  }
+}

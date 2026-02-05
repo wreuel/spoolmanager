@@ -1,0 +1,26 @@
+<nav class="app-breadcrumb" aria-label="Breadcrumb" *ngIf="items.length">
+  <ol>
+    <li *ngFor="let item of items; let last = last">
+      <ng-container *ngIf="item.link && !last; else breadcrumbLabel">
+        <a [routerLink]="item.link" class="app-breadcrumb__link">
+          <span *ngIf="item.icon" class="app-breadcrumb__icon" aria-hidden="true">
+            <svg viewBox="64 64 896 896">
+              <path [attr.d]="iconPath(item.icon)" />
+            </svg>
+          </span>
+          <span>{{ item.label }}</span>
+        </a>
+      </ng-container>
+      <ng-template #breadcrumbLabel>
+        <span class="app-breadcrumb__current" [attr.aria-current]="last ? 'page' : null">
+          <span *ngIf="item.icon" class="app-breadcrumb__icon" aria-hidden="true">
+            <svg viewBox="64 64 896 896">
+              <path [attr.d]="iconPath(item.icon)" />
+            </svg>
+          </span>
+          <span>{{ item.label }}</span>
+        </span>
+      </ng-template>
+    </li>
+  </ol>
+</nav>

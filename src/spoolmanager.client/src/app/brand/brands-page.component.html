@@ -1,0 +1,16 @@
+<section class="brands-page">
+  <app-breadcrumb [items]="breadcrumbItems"></app-breadcrumb>
+
+  <header class="brands-page__header">
+    <div>
+      <p class="brands-page__eyebrow">Directory</p>
+      <h1>Brands</h1>
+      <p>Review, edit, and reorder the manufacturers that anchor your spool catalog.</p>
+    </div>
+    <div class="brands-page__actions">
+      <a routerLink="/brands/add" class="brands-page__action brands-page__action--primary">Add brand</a>
+    </div>
+  </header>
+
+  <app-brand-list></app-brand-list>
+</section>

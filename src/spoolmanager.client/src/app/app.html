@@ -1,0 +1,76 @@
+﻿<ng-container *ngIf="!isAuthRoute(); else authLayout">
+    <div class="app-layout" [class.is-collapsed]="sidebarCollapsed()">
+        <aside class="app-sidebar" [class.is-collapsed]="sidebarCollapsed()">
+            <button
+                type="button"
+                class="app-sidebar__toggle"
+                (click)="toggleSidebar()"
+                [attr.aria-label]="sidebarCollapsed() ? 'Expand navigation' : 'Collapse navigation'"
+                [attr.aria-pressed]="sidebarCollapsed()"
+            >
+                <span class="app-sidebar__toggle-bar"></span>
+                <span class="app-sidebar__toggle-bar"></span>
+                <span class="app-sidebar__toggle-bar"></span>
+            </button>
+
+            <div class="app-sidebar__logo">
+                <span class="app-sidebar__logo-icon">SM</span>
+                <span class="app-sidebar__logo-text" *ngIf="!sidebarCollapsed()">{{ title }}</span>
+            </div>
+
+            <nav class="app-sidebar__nav" aria-label="Primary">
+                <a
+                    *ngFor="let item of navItems"
+                    [routerLink]="item.route"
+                    routerLinkActive="is-active"
+                    [routerLinkActiveOptions]="{ exact: item.route === '/' }"
+                >
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path [attr.d]="navIcons[item.icon]" />
+                    </svg>
+                    <span class="app-sidebar__nav-label" *ngIf="!sidebarCollapsed()">{{ item.label }}</span>
+                </a>
+            </nav>
+
+            <button
+                type="button"
+                class="app-sidebar__theme"
+                (click)="toggleTheme()"
+                [attr.aria-pressed]="theme() === 'dark'"
+                [attr.aria-label]="theme() === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'"
+            >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                        d="M12 4a1 1 0 01 1 1v2a1 1 0 01-2 0V5a1 1 0 011-1zm0 13a5 5 0 100-10 5 5 0 000 10zm8-5a1 1 0 00-1-1h-2a1 1 0 000 2h2a1 1 0 001-1zm-6.95 5.536a1 1 0 111.9.528l-.5 1.93a1 1 0 11-1.94-.504zm5.657-9.9a1 1 0 00-1.414-1.414l-1.414 1.415a1 1 0 101.414 1.414zm-11.314 0L6.98 6.222A1 1 0 105.566 7.636L6.98 9.05a1 1 0 101.414-1.414zM5 12a1 1 0 00-1-1H2a1 1 0 100 2h2a1 1 0 001-1zm1.364 5.657a1 1 0 00-1.414 1.414L6.364 20.485a1 1 0 001.414-1.414zM12 18a1 1 0 011 1v2a1 1 0 11-2 0v-2a1 1 0 011-1z"
+                    ></path>
+                </svg>
+                <span *ngIf="!sidebarCollapsed()">
+                    {{ theme() === 'dark' ? 'Lights on' : 'Lights off' }}
+                </span>
+            </button>
+
+            <button
+                type="button"
+                class="app-sidebar__logout"
+                (click)="logout()"
+            >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                        d="M9 5a2 2 0 012-2h7a2 2 0 012 2v14a2 2 0 01-2 2h-7a2 2 0 01-2-2v-2h2v2h7V5h-7v2H9zM5.414 12l3.293 3.293-1.414 1.414L1.586 10l5.707-5.707 1.414 1.414L5.414 10H15v2H5.414z"
+                    ></path>
+                </svg>
+                <span *ngIf="!sidebarCollapsed()">Logout</span>
+            </button>
+        </aside>
+
+        <section class="app-content">
+            <router-outlet></router-outlet>
+        </section>
+    </div>
+</ng-container>
+
+<ng-template #authLayout>
+    <div class="auth-wrapper">
+        <router-outlet></router-outlet>
+    </div>
+</ng-template>

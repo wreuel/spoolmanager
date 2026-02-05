@@ -1,0 +1,287 @@
+<section class="filament-create">
+  <!-- <header class="filament-create__header">
+    <div>
+      <p class="filament-create__eyebrow">New filament</p>
+      <h2>Register a complete filament</h2>
+      <p>Define manufacturer, colors, and technical parameters to keep the catalog consistent.</p>
+    </div>
+  </header> -->
+
+  <form class="filament-form" [formGroup]="filamentForm" (ngSubmit)="submit()" novalidate>
+    <div class="filament-form__cards">
+      <article class="filament-form-card filament-form-card--stacked">
+        <section class="filament-form-section">
+          <header>
+            <h3>Identification</h3>
+            <p>Internal name, article, and manufacturer with quick search.</p>
+          </header>
+
+          <div class="filament-form-card__grid">
+            <label class="filament-form__field" for="filament-name">
+              <span>Name</span>
+              <input id="filament-name" type="text" formControlName="name" placeholder="Ex. Galaxy Black" />
+              <small class="filament-form__error" *ngIf="filamentForm.controls.name.invalid && (filamentForm.controls.name.dirty || filamentForm.controls.name.touched)">
+                Please enter at least 2 characters.
+              </small>
+            </label>
+
+            <label class="filament-form__field" for="filament-article">
+              <span>Article number</span>
+              <input id="filament-article" type="text" formControlName="externalId" placeholder="Manufacturer SKU" />
+            </label>
+          </div>
+
+          <div class="brand-picker">
+            <div class="brand-picker__label">
+              <span>Manufacturer</span>
+              <a routerLink="/brands/add">Add new</a>
+            </div>
+
+            <div
+              class="brand-picker__select"
+              [class.brand-picker__select--open]="showBrandSuggestions()"
+            >
+              <input
+                #brandSearchInput
+                type="search"
+                class="brand-picker__input"
+                placeholder="Search by manufacturer name"
+                [value]="brandQuery()"
+                (input)="onBrandQueryChange($any($event.target).value)"
+                (focus)="onBrandInputFocus()"
+                (blur)="onBrandInputBlur()"
+                [attr.aria-expanded]="showBrandSuggestions()"
+                [attr.aria-controls]="showBrandSuggestions() ? 'brand-suggestions' : null"
+              />
+
+              <button
+                type="button"
+                class="brand-picker__clear"
+                *ngIf="selectedBrand()"
+                (click)="clearBrandSelection()"
+                aria-label="Clear manufacturer selection"
+              >
+                ×
+              </button>
+
+              <button
+                type="button"
+                class="brand-picker__arrow"
+                aria-label="Toggle manufacturer list"
+                (mousedown)="$event.preventDefault()"
+                (click)="toggleBrandDropdown()"
+              >
+                <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </button>
+            </div>
+
+            <small class="filament-form__error" *ngIf="filamentForm.controls.brandId.invalid && (filamentForm.controls.brandId.dirty || filamentForm.controls.brandId.touched)">
+              Selecione um fabricante.
+            </small>
+
+            <div class="brand-picker__status" *ngIf="brandStatus() === 'loading'">Loading Brands…</div>
+            <div class="brand-picker__status brand-picker__status--error" *ngIf="brandStatus() === 'error'">Unable to load the list of Brands.</div>
+
+            <ul
+              class="brand-picker__dropdown"
+              *ngIf="showBrandSuggestions()"
+              id="brand-suggestions"
+              role="listbox"
+            >
+              <li *ngFor="let brand of filteredBrands(); trackBy: trackBrand">
+                <button type="button" (click)="selectBrand(brand)">
+                  <span>{{ brand.name }}</span>
+                  <span class="brand-picker__badge">#{{ brand.id }}</span>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="filament-form-section">
+          <header>
+            <h3>Color palette</h3>
+            <p>Choose whether the material is single color or multicolor (Coextruded / Longitudinal).</p>
+          </header>
+
+          <div class="color-mode">
+            <button type="button" [class.is-active]="!isMultiColor()" (click)="setColorMode('single')">Single color</button>
+            <button type="button" [class.is-active]="isMultiColor()" (click)="setColorMode('multi')">Multicolor</button>
+          </div>
+
+          <div class="color-content" *ngIf="!isMultiColor(); else multiColor">
+            <label class="color-single">
+              <span>Select color</span>
+              <input type="color" formControlName="colorHex" aria-label="Select color" />
+              <input type="text" formControlName="colorHex" placeholder="#000000" />
+            </label>
+          </div>
+          <ng-template #multiColor>
+            <div class="color-multi">
+              <div class="color-multi__directions" role="group" aria-label="Color directions">
+                <button type="button" [class.is-active]="multiColorDirection() === 'coextrusada'" (click)="setMultiColorDirection('coextrusada')">Coextruded</button>
+                <button type="button" [class.is-active]="multiColorDirection() === 'longitudinal'" (click)="setMultiColorDirection('longitudinal')">Longitudinal</button>
+              </div>
+
+              <div class="color-multi__list">
+                <div class="color-multi__item" *ngFor="let color of multiColors(); let i = index">
+                  <span class="color-multi__label">Color {{ i + 1 }}</span>
+                  <input type="color" [value]="color" (input)="updateColorStop(i, $any($event.target).value)" aria-label="Color {{ i + 1 }}" />
+                  <input type="text" [value]="color" (input)="updateColorStop(i, $any($event.target).value)" />
+                  <button type="button" class="color-multi__remove" *ngIf="multiColors().length > 2" (click)="removeColorStop(i)" aria-label="Remove color">×</button>
+                </div>
+              </div>
+
+              <button type="button" class="color-multi__add" (click)="addColorStop()">+ Add color</button>
+            </div>
+          </ng-template>
+        </section>
+
+        <section class="filament-form-section">
+          <header>
+            <h3>Material and mass</h3>
+            <p>Define the composition and physical details.</p>
+          </header>
+
+          <div class="filament-form-card__grid filament-form-card__grid--three">
+            <label class="filament-form__field" for="filament-material">
+              <span>Material</span>
+              <input id="filament-material" type="text" formControlName="material" list="material-options" placeholder="PLA+" />
+              <datalist id="material-options">
+                <option *ngFor="let material of materials" [value]="material"></option>
+              </datalist>
+            </label>
+
+            <label class="filament-form__field" for="filament-finish">
+              <span>Finish</span>
+              <select id="filament-finish" formControlName="finish">
+                <option *ngFor="let finish of finishes" [value]="finish">{{ finish }}</option>
+                <option value="">Other</option>
+              </select>
+            </label>
+
+            <label class="filament-form__field" for="filament-price">
+              <span>Price</span>
+              <div class="filament-form__input-prefix">
+                <span>US$</span>
+                <input id="filament-price" type="number" step="0.01" formControlName="price" />
+              </div>
+            </label>
+          </div>
+
+          <div class="filament-form-card__grid filament-form-card__grid--four">
+            <label class="filament-form__field">
+              <span>Density (g/cm³)</span>
+              <input type="number" step="0.01" formControlName="density" />
+            </label>
+
+            <label class="filament-form__field">
+              <span>Diameter (mm)</span>
+              <input type="number" step="0.01" formControlName="diameter" />
+            </label>
+
+            <label class="filament-form__field">
+              <span>Weight (g)</span>
+              <input type="number" step="1" formControlName="weightGrams" />
+            </label>
+
+            <label class="filament-form__field">
+              <span>Spool weight (g)</span>
+              <input type="number" step="1" formControlName="spoolWeightGrams" />
+            </label>
+          </div>
+
+          <div class="filament-form-card__grid filament-form-card__grid--two">
+            <label class="filament-form__field">
+              <span>Spool type</span>
+              <select formControlName="spoolType">
+                <option *ngFor="let type of spoolTypes" [value]="type">{{ type }}</option>
+                <option value="">Other</option>
+              </select>
+            </label>
+
+            <label class="filament-form__field">
+              <span>Actual cost</span>
+              <div class="filament-form__input-prefix">
+                <span>US$</span>
+                <input type="number" step="0.01" formControlName="cost" />
+              </div>
+              <small class="filament-form__hint">Leave 0 to use the listed price.</small>
+            </label>
+          </div>
+
+          <label class="filament-form__field">
+            <span>Notes</span>
+            <textarea rows="3" formControlName="comment" placeholder="Notes about batch, gloss, etc."></textarea>
+          </label>
+        </section>
+
+        <section class="filament-form-section">
+          <header>
+            <h3>Temperatures</h3>
+            <p>Provide recommended ranges for extruder and bed.</p>
+          </header>
+
+          <div class="filament-form-card__grid filament-form-card__grid--two">
+            <div class="filament-form__field">
+              <span>Extruder (°C)</span>
+              <div class="filament-range">
+                <input type="number" formControlName="extruderTempLow" placeholder="Min." />
+                <span class="filament-range__divider">→</span>
+                <input type="number" formControlName="extruderTempHigh" placeholder="Max." />
+              </div>
+            </div>
+
+            <div class="filament-form__field">
+              <span>Bed (°C)</span>
+              <div class="filament-range">
+                <input type="number" formControlName="bedTempLow" placeholder="Min." />
+                <span class="filament-range__divider">→</span>
+                <input type="number" formControlName="bedTempHigh" placeholder="Max." />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="filament-form-section filament-form-section--feedback">
+          <div class="filament-form__status" *ngIf="status() === 'error'">
+            {{ errorMessage() }}
+          </div>
+          <div class="filament-form__status filament-form__status--success" *ngIf="status() === 'success'">
+            Filament saved successfully.
+          </div>
+
+          <div class="filament-form__actions">
+            <button
+              type="button"
+              class="filament-form__action filament-form__action--ghost"
+              (click)="cancel()"
+              [disabled]="status() === 'saving'"
+              routerLink="/filaments" aria-label="Back to filament list"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="filament-form__action filament-form__action--secondary"
+              (click)="submit(true)"
+              [disabled]="filamentForm.invalid || status() === 'saving'"
+            >
+              Save and add another
+            </button>
+            <button
+              type="submit"
+              class="filament-form__action filament-form__action--primary"
+              [disabled]="filamentForm.invalid || status() === 'saving'"
+            >
+              <span *ngIf="status() === 'saving'">Saving…</span>
+              <span *ngIf="status() !== 'saving'">Save filament</span>
+            </button>
+          </div>
+        </section>
+      </article>
+    </div>
+  </form>
+</section>

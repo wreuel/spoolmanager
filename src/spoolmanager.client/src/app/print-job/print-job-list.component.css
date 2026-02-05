@@ -1,0 +1,213 @@
+.print-job-table-card {
+  padding: 2rem;
+  border-radius: 1.25rem;
+  background: radial-gradient(
+      circle at 75% 15%,
+      color-mix(in srgb, var(--color-accent-hot), var(--color-panel) 65%),
+      var(--color-panel)
+    );
+  box-shadow: var(--color-shadow);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.print-job-table-card__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.print-job-table-card__intro {
+  max-width: 34rem;
+}
+
+.print-job-table-card__eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  font-size: 0.75rem;
+  color: var(--color-accent-hot);
+  margin: 0 0 0.5rem;
+}
+
+.print-job-table-card__header h2 {
+  margin: 0 0 0.35rem;
+  font-size: clamp(1.9rem, 3vw, 2.5rem);
+  color: var(--color-text);
+}
+
+.print-job-table-card__header p {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.print-job-table-card__header-actions {
+  display: flex;
+  align-items: center;
+}
+
+.print-job-table-card__refresh {
+  background: var(--button-primary-bg);
+  border: 1px solid transparent;
+  color: var(--button-primary-text);
+  border-radius: 999px;
+  padding: 0.65rem 1.5rem;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 12px 22px rgba(33, 79, 208, 0.25);
+}
+
+.print-job-table-card__refresh:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.print-job-table-card__refresh:not(:disabled):hover {
+  opacity: 0.9;
+}
+
+.print-job-table__state {
+  text-align: center;
+  padding: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.85rem;
+  color: var(--color-text);
+  background: var(--color-panel-muted);
+  font-weight: 600;
+}
+
+.print-job-table__state--error {
+  color: var(--color-accent-hot);
+  border-color: var(--color-accent-hot);
+}
+
+.print-job-table__wrapper {
+  overflow-x: auto;
+}
+
+.print-job-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 720px;
+}
+
+.print-job-table th,
+.print-job-table td {
+  padding: 16px 12px;
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+}
+
+.print-job-table th {
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+}
+
+.print-job-table__sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  color: inherit;
+  font: inherit;
+  text-transform: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.print-job-table__sort.is-active {
+  color: var(--color-text);
+}
+
+.print-job-table__sort:focus-visible {
+  outline: none;
+  color: var(--color-text);
+  box-shadow: inset 0 -2px 0 var(--color-primary);
+}
+
+.print-job-table__sort-icon {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.print-job-table__sort.is-active .print-job-table__sort-icon {
+  color: var(--color-primary);
+}
+
+.print-job-table__name {
+  margin: 0 0 4px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.print-job-table__link {
+  color: var(--color-primary);
+  font-size: 14px;
+}
+
+.print-job-table__metric {
+  margin: 0;
+  font-weight: 600;
+}
+
+.print-job-table__metric-hint {
+  margin: 4px 0 0;
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+.print-job-table__spools {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.print-job-table__spools li {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+.print-job-table__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-primary) 20%, transparent);
+  color: var(--color-primary-strong);
+  font-size: 12px;
+}
+
+.print-job-table__spool-name {
+  font-weight: 500;
+}
+
+.print-job-table__spool-grams {
+  margin-left: auto;
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 768px) {
+  .print-job-table-card {
+    padding: 20px;
+  }
+
+  .print-job-table {
+    min-width: 600px;
+  }
+}

@@ -1,0 +1,30 @@
+<section class="login-page">
+  <article class="login-card">
+    <div class="login-card__intro">
+      <p class="login-card__eyebrow">Spool Manager</p>
+      <h1>Sign in to continue</h1>
+      <p>Access the operations dashboard, manage spools, and keep production data synchronized.</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <label class="login-form__field">
+        <span>Username</span>
+        <input type="text" formControlName="username" autocomplete="username" [class.is-invalid]="controlInvalid('username')" />
+        <small *ngIf="controlInvalid('username')">Username is required.</small>
+      </label>
+
+      <label class="login-form__field">
+        <span>Password</span>
+        <input type="password" formControlName="password" autocomplete="current-password" [class.is-invalid]="controlInvalid('password')" />
+        <small *ngIf="controlInvalid('password')">Password is required.</small>
+      </label>
+
+      <p class="login-card__error" *ngIf="errorMessage()">{{ errorMessage() }}</p>
+
+      <button type="submit" [disabled]="status() === 'loading'">
+        <span *ngIf="status() !== 'loading'">Sign in</span>
+        <span *ngIf="status() === 'loading'">Signing in…</span>
+      </button>
+    </form>
+  </article>
+</section>

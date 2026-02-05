@@ -1,0 +1,276 @@
+<section class="spool-create">
+  <!-- <header class="spool-create__header">
+    <div>
+      <p class="spool-create__eyebrow">New Spool</p>
+      <h2>Register spool ready for use</h2>
+      <p>Provide the external identifier, usage dates, and initial weight to maintain consistent cost per gram projections.</p>
+    </div>
+  </header> -->
+
+  <form class="spool-form" [formGroup]="spoolForm" (ngSubmit)="submit()" novalidate>
+    <article class="spool-card spool-card--stacked">
+      <section class="spool-section">
+        <header>
+          <h3>Filament source</h3>
+          <p>We use the SpoolMan ExternalId to automatically fetch manufacturer and material information.</p>
+        </header>
+
+        <div class="filament-picker">
+          <div class="filament-picker__label">
+            <span>Filament</span>
+            <a routerLink="/filaments/add">Add new</a>
+          </div>
+
+          <div
+            class="filament-picker__select"
+            [class.filament-picker__select--open]="showFilamentSuggestions()"
+          >
+            <input
+              #filamentSearchInput
+              type="search"
+              class="filament-picker__input"
+              placeholder="Search by full name"
+              [value]="filamentQuery()"
+              (input)="onFilamentQueryChange($any($event.target).value)"
+              (focus)="onFilamentInputFocus()"
+              (blur)="onFilamentInputBlur()"
+              [attr.aria-expanded]="showFilamentSuggestions()"
+              [attr.aria-controls]="showFilamentSuggestions() ? 'filament-suggestions' : null"
+            />
+
+            <button
+              type="button"
+              class="filament-picker__clear"
+              *ngIf="selectedFilament()"
+              (click)="clearFilamentSelection()"
+              aria-label="Limpar filamento selecionado"
+            >
+              ×
+            </button>
+
+            <button
+              type="button"
+              class="filament-picker__arrow"
+              aria-label="Alternar lista de filamentos"
+              (mousedown)="$event.preventDefault()"
+              (click)="toggleFilamentDropdown()"
+            >
+              <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </button>
+          </div>
+
+          <small class="spool-field__hint">
+            Combine registered filaments with those imported from SpoolMan. We show the <em>FullName</em> for convenience.
+          </small>
+          <small class="spool-field__error" *ngIf="hasFilamentSelectionError()">
+            Select a filament or enter the ExternalId manually.
+          </small>
+
+          <div class="filament-picker__status" *ngIf="filamentStatus() === 'loading'">
+            Loading filaments…
+          </div>
+          <div class="filament-picker__status filament-picker__status--error" *ngIf="filamentStatus() === 'error'">
+            {{ filamentError() ?? 'Failed to load filaments.' }}
+          </div>
+
+          <ul
+            class="filament-picker__dropdown"
+            *ngIf="showFilamentSuggestions()"
+            id="filament-suggestions"
+            role="listbox"
+          >
+            <li *ngFor="let option of filteredFilaments(); trackBy: trackFilamentOption">
+              <button type="button" (click)="selectFilament(option)">
+                <span>{{ option.label }}</span>
+                <span class="filament-picker__badge">
+                  {{ option.source === 'local' ? 'Catalog' : 'SpoolMan' }}
+                </span>
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <div class="spool-card__grid">
+          <label class="spool-field" for="spool-lot">
+            <span>Lot</span>
+            <input id="spool-lot" type="text" formControlName="lotNumber" placeholder="Lot identifier" />
+          </label>
+
+          <label class="spool-field" for="spool-qty">
+            <span>Qty</span>
+            <input id="spool-qty" type="text" formControlName="qty" placeholder="Quantity" />
+          </label>
+
+          <label class="spool-field" for="spool-location">
+            <span>Location</span>
+            <input id="spool-location" type="text" formControlName="location" placeholder="Shelf or drawer" />
+          </label>
+        </div>
+      </section>
+
+      <section class="spool-section">
+        <header>
+          <h3>Weights and values</h3>
+          <p>Set total cost and initial weight so cost-per-gram reports remain accurate.</p>
+        </header>
+
+        <div class="spool-card__grid spool-card__grid--four spool-card__grid--weights">
+          <label class="spool-field" for="spool-price">
+            <span>Price</span>
+            <div class="spool-input-prefix">
+              <span>US$</span>
+              <input id="spool-price" type="number" step="0.01" min="0" formControlName="price" />
+            </div>
+          </label>
+
+          <label class="spool-field" for="spool-weight">
+            <span>Initial weight (g)</span>
+            <input id="spool-weight" type="number" min="1" step="1" formControlName="initialWeight" />
+            <small class="spool-field__hint">We fill in with the weight informed by the filament.</small>
+          </label>
+
+          <label class="spool-field spool-field--readonly" for="spool-empty-weight">
+            <span>Empty spool weight (g)</span>
+            <input id="spool-empty-weight" type="number" formControlName="spoolWeight" readonly />
+            <small class="spool-field__hint">Value of the empty spool (spool_weight).</small>
+          </label>
+
+          <label class="spool-field spool-field--readonly" for="spool-measured-weight">
+            <span>Measured weight (g)</span>
+            <input id="spool-measured-weight" type="number" [value]="measuredWeight()" readonly />
+            <small class="spool-field__hint">Initial weight + empty spool weight.</small>
+          </label>
+        </div>
+
+        <div class="spool-card__grid spool-card__grid--three spool-card__grid--weights">
+          <label class="spool-field" for="spool-used-weight">
+            <span>Used weight (g)</span>
+            <input id="spool-used-weight" type="number" min="0" step="1" formControlName="usedWeight" />
+            <small class="spool-field__hint">Update to recalculate remaining weight.</small>
+          </label>
+
+          <label class="spool-field spool-field--readonly" for="spool-remaining-weight">
+            <span>Remaining weight (g)</span>
+            <input id="spool-remaining-weight" type="number" [value]="remainingWeight()" readonly />
+          </label>
+          <label class="spool-field spool-field--full" for="spool-comment">
+            <span>Comments</span>
+            <textarea id="spool-comment" rows="2" formControlName="comment" placeholder="Quick notes"></textarea>
+          </label>
+        </div>
+      </section>
+
+      <section class="spool-section">
+        <header>
+          <h3>Usage period</h3>
+          <p>Dates help highlight old spools and identify recent use.</p>
+        </header>
+
+        <div class="spool-card__grid spool-card__grid--two">
+          <label class="spool-field spool-date-field">
+            <span>First use</span>
+            <div
+              class="spool-date-field__control"
+              role="button"
+              tabindex="0"
+              (click)="openDatePicker(firstUseNative)"
+              (keydown)="handleDateControlKeydown($event, firstUseNative)"
+            >
+              <input
+                type="text"
+                class="spool-date-field__display"
+                placeholder="dd/MM/yyyy"
+                [value]="formatDisplayDate(spoolForm.controls.firstUsed.value)"
+                readonly
+              />
+              <span class="spool-date-field__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                  <path d="M7 2v2H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2V2h-2v2H9V2H7zm12 7H5v10h14z" />
+                </svg>
+              </span>
+            </div>
+            <input
+              #firstUseNative
+              type="date"
+              class="spool-date-field__native"
+              formControlName="firstUsed"
+              tabindex="-1"
+              aria-hidden="true"
+            />
+          </label>
+
+          <label class="spool-field spool-date-field">
+            <span>Last use</span>
+            <div
+              class="spool-date-field__control"
+              role="button"
+              tabindex="0"
+              (click)="openDatePicker(lastUseNative)"
+              (keydown)="handleDateControlKeydown($event, lastUseNative)"
+            >
+              <input
+                type="text"
+                class="spool-date-field__display"
+                placeholder="dd/MM/yyyy"
+                [value]="formatDisplayDate(spoolForm.controls.lastUsed.value)"
+                readonly
+              />
+              <span class="spool-date-field__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                  <path d="M7 2v2H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2V2h-2v2H9V2H7zm12 7H5v10h14z" />
+                </svg>
+              </span>
+            </div>
+            <input
+              #lastUseNative
+              type="date"
+              class="spool-date-field__native"
+              formControlName="lastUsed"
+              tabindex="-1"
+              aria-hidden="true"
+            />
+          </label>
+        </div>
+      </section>
+
+      <section class="spool-section spool-section--feedback">
+        <div class="spool-form__status" *ngIf="status() === 'error'">
+          {{ errorMessage() }}
+        </div>
+        <div class="spool-form__status spool-form__status--success" *ngIf="status() === 'success'">
+          Spool registered successfully.
+        </div>
+
+        <div class="spool-form__actions">
+          <button
+            type="button"
+            class="spool-action spool-action--ghost"
+            (click)="cancel()"
+            [disabled]="status() === 'saving'"
+            routerLink="/spools" aria-label="Back to spool list"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            class="spool-action spool-action--secondary"
+            (click)="submit(true)"
+            [disabled]="spoolForm.invalid || status() === 'saving'"
+          >
+            Save and add another
+          </button>
+          <button
+            type="submit"
+            class="spool-action spool-action--primary"
+            [disabled]="spoolForm.invalid || status() === 'saving'"
+          >
+            <span *ngIf="status() === 'saving'">Saving…</span>
+            <span *ngIf="status() !== 'saving'">Save spool</span>
+          </button>
+        </div>
+      </section>
+    </article>
+  </form>
+</section>

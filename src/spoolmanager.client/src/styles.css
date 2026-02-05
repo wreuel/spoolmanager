@@ -1,0 +1,78 @@
+:root,
+:root[data-theme='light'] {
+	color-scheme: light;
+	--color-primary: #214fd0;
+	--color-primary-strong: #0f2e89;
+	--color-surface: #f0f1f8;
+	--color-panel: #ffffff;
+	--color-panel-muted: #f8f9ff;
+	--color-border: rgba(33, 79, 208, 0.12);
+	--color-border-strong: rgba(33, 79, 208, 0.3);
+	--color-text: #101428;
+	--color-text-muted: #4b526b;
+	--color-muted-contrast: #5c6283;
+	--color-accent-warm: #efa006;
+	--color-accent-hot: #e31809;
+	--color-success: #1c9c6e;
+	--color-nav-bg: #152862;
+	--color-nav-accent: #1f358f;
+	--color-nav-text: rgba(255, 255, 255, 0.85);
+	--color-shadow: 0 32px 60px rgba(20, 30, 67, 0.18);
+	--color-surface-gradient: linear-gradient(145deg, rgba(33, 79, 208, 0.08), #f0f1f8);
+	--color-ink-deep: #050816;
+	--button-primary-bg: var(--color-primary);
+	--button-primary-text: #ffffff;
+	--button-secondary-bg: rgba(33, 79, 208, 0.12);
+	--button-secondary-text: var(--color-primary);
+	--button-ghost-border: rgba(16, 36, 80, 0.18);
+}
+
+:root[data-theme='dark'] {
+	color-scheme: dark;
+	--color-primary: #7ca6ff;
+	--color-primary-strong: #a8c3ff;
+	--color-surface: #050816;
+	--color-panel: #0f172a;
+	--color-panel-muted: #172036;
+	--color-border: rgba(255, 255, 255, 0.08);
+	--color-border-strong: rgba(255, 255, 255, 0.2);
+	--color-text: #f5f7ff;
+	--color-text-muted: #98a3c9;
+	--color-muted-contrast: #cbd5ff;
+	--color-accent-warm: #ffc55a;
+	--color-accent-hot: #ff6b5e;
+	--color-success: #5de3ae;
+	--color-nav-bg: #030711;
+	--color-nav-accent: #0b1325;
+	--color-nav-text: rgba(255, 255, 255, 0.92);
+	--color-shadow: 0 32px 80px rgba(3, 5, 15, 0.65);
+	--color-surface-gradient: radial-gradient(circle at 20% 20%, rgba(124, 166, 255, 0.15), #050816 55%);
+	--color-ink-deep: #050816;
+	--button-primary-bg: var(--color-primary);
+	--button-primary-text: #050816;
+	--button-secondary-bg: rgba(255, 255, 255, 0.1);
+	--button-secondary-text: #f5f7ff;
+	--button-ghost-border: rgba(255, 255, 255, 0.24);
+}
+
+*, *::before, *::after {
+	box-sizing: border-box;
+}
+
+html, body {
+	margin: 0;
+	padding: 0;
+	min-height: 100%;
+}
+
+body {
+	font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+	background: var(--color-surface-gradient);
+	color: var(--color-text);
+	transition: background 0.3s ease, color 0.3s ease;
+}
+
+#root, app-root {
+	min-height: 100vh;
+	display: block;
+}

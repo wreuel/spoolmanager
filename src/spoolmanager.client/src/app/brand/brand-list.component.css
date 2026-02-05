@@ -1,0 +1,203 @@
+.brand-table-card {
+  padding: 2rem;
+  border-radius: 1.25rem;
+  background: radial-gradient(circle at 20% 20%, color-mix(in srgb, var(--color-primary), var(--color-panel) 80%), var(--color-panel));
+  box-shadow: var(--color-shadow);
+  border: 1px solid var(--color-border);
+}
+
+.brand-table-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.brand-table-card__eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin: 0 0 0.35rem;
+}
+
+.brand-table-card__refresh {
+  border: 1px solid transparent;
+  background: var(--button-primary-bg);
+  color: var(--button-primary-text);
+  padding: 0.5rem 1.25rem;
+  border-radius: 999px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 12px 22px rgba(33, 79, 208, 0.25);
+}
+
+.brand-table-card__refresh:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.brand-table__state {
+  padding: 0.85rem 1rem;
+  border-radius: 0.75rem;
+  background: var(--color-panel-muted);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+}
+
+.brand-table__state--error {
+  background: color-mix(in srgb, var(--color-accent-hot), transparent 80%);
+  color: var(--color-accent-hot);
+  border-color: color-mix(in srgb, var(--color-accent-hot), transparent 60%);
+}
+
+.brand-table__wrapper {
+  overflow-x: auto;
+}
+
+.brand-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 640px;
+  background: var(--color-panel);
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: var(--color-shadow);
+  border: 1px solid var(--color-border);
+}
+
+.brand-table thead {
+  background: var(--color-panel-muted);
+}
+
+.brand-table th,
+.brand-table td {
+  padding: 1rem 1.25rem;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.brand-table tr:last-child td {
+  border-bottom: none;
+}
+
+.brand-table__sorter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: none;
+  background: transparent;
+  font-weight: 600;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.brand-table__sorter-icons {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.brand-table__sorter-icons svg {
+  width: 12px;
+  height: 12px;
+  color: var(--color-text-muted);
+}
+
+.brand-table__sorter-icons svg.is-active {
+  color: var(--color-text);
+}
+
+.brand-table__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  background: color-mix(in srgb, var(--color-primary), transparent 80%);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.brand-table__actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.brand-table__actions button {
+  border-radius: 999px;
+  border: none;
+  padding: 0.45rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.brand-table__actions button:first-child {
+  background: var(--button-primary-bg);
+  color: var(--button-primary-text);
+  box-shadow: 0 10px 20px rgba(33, 79, 208, 0.25);
+}
+
+.brand-table__actions button:last-child {
+  background: var(--button-secondary-bg);
+  color: var(--button-secondary-text);
+  border: 1px solid var(--button-ghost-border);
+}
+
+.brand-table__actions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.brand-table__actions-col {
+  text-align: right;
+}
+
+.brand-table__edit-field input {
+  width: 100%;
+  border-radius: 0.65rem;
+  border: 1px solid var(--color-border);
+  padding: 0.6rem 0.9rem;
+  background: var(--color-panel);
+  color: var(--color-text);
+}
+
+.brand-table__error {
+  margin-top: 0.35rem;
+  font-size: 0.8rem;
+  color: var(--color-accent-hot);
+}
+
+.brand-table__edit-actions {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.brand-table__edit-feedback {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--color-accent-hot);
+}
+
+@media (max-width: 720px) {
+  .brand-table {
+    min-width: unset;
+  }
+
+  .brand-table th,
+  .brand-table td {
+    padding: 0.75rem;
+  }
+
+  .brand-table__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

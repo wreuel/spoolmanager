@@ -1,0 +1,217 @@
+﻿:host {
+    display: block;
+    min-height: 100vh;
+    background: var(--color-surface-gradient);
+    color: var(--color-text);
+    font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.app-layout {
+    display: flex;
+    min-height: 100vh;
+    backdrop-filter: blur(6px);
+}
+
+.app-sidebar {
+    width: 280px;
+    padding: 2.25rem 1.5rem 2.5rem;
+    background: var(--color-nav-bg);
+    color: var(--color-nav-text);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    transition: width 0.2s ease;
+    position: relative;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.app-sidebar.is-collapsed {
+    width: 96px;
+}
+
+.app-sidebar__toggle {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+    width: 42px;
+    height: 42px;
+    border-radius: 999px;
+    border: none;
+    background: var(--color-nav-accent);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.app-sidebar__toggle:hover {
+    background: rgba(255, 255, 255, 0.18);
+}
+
+.app-sidebar__toggle-bar {
+    width: 18px;
+    height: 2px;
+    background: var(--color-nav-text);
+    border-radius: 2px;
+}
+
+.app-sidebar__logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 3.5rem;
+}
+
+.app-sidebar__logo-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--color-accent-warm);
+    color: var(--color-ink-deep);
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.app-sidebar__logo-text {
+    font-size: 1.25rem;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+}
+
+.app-sidebar__nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.app-sidebar__nav a {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.65rem 0.85rem;
+    border-radius: 0.9rem;
+    text-decoration: none;
+    color: var(--color-nav-text);
+    font-weight: 600;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.app-sidebar__nav a svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+.app-sidebar__nav a:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.app-sidebar__nav a.is-active {
+    background: rgba(255, 255, 255, 0.18);
+    color: var(--color-accent-warm);
+}
+
+.app-sidebar.is-collapsed .app-sidebar__logo-text,
+.app-sidebar.is-collapsed .app-sidebar__nav-label {
+    display: none;
+}
+
+.app-sidebar__theme {
+    margin-top: auto;
+    border-radius: 999px;
+    border: 1px solid var(--button-ghost-border);
+    padding: 0.65rem 1.1rem;
+    background: transparent;
+    color: var(--color-nav-text);
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: border 0.2s ease, background 0.2s ease;
+}
+
+.app-sidebar__theme:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.app-sidebar__theme svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+}
+
+.app-sidebar__logout {
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--color-accent-hot), transparent 45%);
+    padding: 0.65rem 1.1rem;
+    background: color-mix(in srgb, var(--color-accent-hot), transparent 80%);
+    color: var(--color-accent-hot);
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+    margin-top: 0.35rem;
+}
+
+.app-sidebar__logout:hover {
+    background: color-mix(in srgb, var(--color-accent-hot), transparent 70%);
+}
+
+.app-sidebar__logout svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+}
+
+.app-content {
+    flex: 1;
+    padding: 3rem;
+    background: var(--color-surface);
+    color: var(--color-text);
+    overflow-y: auto;
+}
+
+.auth-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: var(--color-surface);
+}
+
+@media (max-width: 900px) {
+    .app-layout {
+        flex-direction: column;
+    }
+
+    .app-sidebar,
+    .app-sidebar.is-collapsed {
+        width: 100%;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .app-sidebar__logo {
+        margin-top: 0;
+    }
+
+    .app-sidebar__nav {
+        flex-direction: row;
+        gap: 0.5rem;
+    }
+
+    .app-content {
+        padding: 2rem 1.5rem;
+    }
+}

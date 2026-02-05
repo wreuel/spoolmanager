@@ -1,0 +1,99 @@
+.login-page {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-card {
+  width: min(420px, 100%);
+  padding: 2.5rem;
+  border-radius: 1.5rem;
+  background: linear-gradient(145deg, var(--color-panel), color-mix(in srgb, var(--color-accent-hot), var(--color-panel) 75%));
+  border: 1px solid color-mix(in srgb, var(--color-border), var(--color-accent-hot) 35%);
+  box-shadow: var(--color-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  color: var(--color-text);
+}
+
+.login-card__intro h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 2.6rem);
+}
+
+.login-card__intro p {
+  margin: 0.4rem 0 0;
+  color: color-mix(in srgb, var(--color-text), transparent 35%);
+}
+
+.login-card__eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  font-size: 0.75rem;
+  margin: 0 0 0.5rem;
+  color: var(--color-accent-hot);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.login-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-weight: 600;
+}
+
+.login-form__field span {
+  font-size: 0.9rem;
+  color: var(--color-text);
+}
+
+.login-form__field input {
+  border-radius: 0.75rem;
+  border: 1px solid var(--color-border);
+  padding: 0.85rem 1rem;
+  background: var(--color-panel);
+  color: var(--color-text);
+  font-size: 1rem;
+}
+
+.login-form__field input.is-invalid {
+  border-color: var(--color-accent-hot);
+}
+
+.login-form__field small {
+  color: var(--color-accent-hot);
+  font-size: 0.8rem;
+}
+
+.login-card__error {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  border-radius: 0.85rem;
+  background: color-mix(in srgb, var(--color-accent-hot), transparent 70%);
+  color: var(--color-accent-hot);
+  border: 1px solid color-mix(in srgb, var(--color-accent-hot), var(--color-border));
+}
+
+button[type='submit'] {
+  border: none;
+  border-radius: 999px;
+  padding: 0.9rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--button-primary-bg);
+  color: var(--button-primary-text);
+  box-shadow: 0 12px 24px rgba(33, 79, 208, 0.25);
+}
+
+button[type='submit']:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}

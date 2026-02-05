@@ -1,0 +1,56 @@
+<section class="brand-card">
+  <form class="brand-form" [formGroup]="brandForm" (ngSubmit)="submit()" novalidate>
+    <label class="brand-form__label" for="brand-name">Brand name</label>
+    <input
+      id="brand-name"
+      type="text"
+      class="brand-form__input"
+      formControlName="name"
+      placeholder="e.g. Prusament"
+      autocomplete="organization"
+      [attr.aria-invalid]="shouldShowError('name')"
+      [attr.aria-describedby]="shouldShowError('name') ? 'brand-name-error' : null"
+    />
+    <p class="brand-form__hint">Use at least two characters so the entry is easy to search later.</p>
+
+    <div class="brand-form__error" *ngIf="shouldShowError('name')" id="brand-name-error">
+      <span *ngIf="brandForm.controls.name.errors?.['required']">Brand name is required.</span>
+      <span *ngIf="brandForm.controls.name.errors?.['minlength']">Brand name must be at least 2 characters.</span>
+    </div>
+
+    <div class="brand-form__actions">
+      <button
+        type="button"
+        class="brand-form__action brand-form__action--ghost"
+        (click)="cancel()"
+        [disabled]="isSaving"
+        routerLink="/brands" aria-label="Voltar para a lista"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        class="brand-form__action brand-form__action--secondary"
+        (click)="submit(true)"
+        [disabled]="brandForm.invalid || isSaving"
+      >
+        Save and New
+      </button>
+      <button
+        type="submit"
+        class="brand-form__action brand-form__action--primary"
+        [disabled]="brandForm.invalid || isSaving"
+      >
+        <span *ngIf="isSaving">Saving…</span>
+        <span *ngIf="!isSaving">Save</span>
+      </button>
+    </div>
+  </form>
+
+  <p class="brand-status brand-status--success" *ngIf="showSuccessMessage" role="status" aria-live="polite">
+    Brand saved successfully.
+  </p>
+  <p class="brand-status brand-status--error" *ngIf="showErrorMessage" role="alert">
+    {{ errorMessage() }}
+  </p>
+</section>

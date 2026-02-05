@@ -1,0 +1,88 @@
+<section class="print-job-table-card">
+  <header class="print-job-table-card__header">
+    <div class="print-job-table-card__intro">
+      <p class="print-job-table-card__eyebrow">Production</p>
+      <h2>Registered prints</h2>
+      <p>Keep the production history synchronized with spool usage, duration, and cost insights.</p>
+    </div>
+    <div class="print-job-table-card__header-actions">
+      <button type="button" class="print-job-table-card__refresh" (click)="refresh()" [disabled]="status() === 'loading'">
+        Refresh
+      </button>
+    </div>
+  </header>
+
+  <div class="print-job-table__state" *ngIf="status() === 'loading'">Loading prints…</div>
+  <div class="print-job-table__state print-job-table__state--error" *ngIf="status() === 'error'">{{ errorMessage() }}</div>
+  <div class="print-job-table__state" *ngIf="status() === 'ready' && printJobs().length === 0">No prints registered yet.</div>
+  <div class="print-job-table__wrapper" *ngIf="status() === 'ready' && printJobs().length > 0">
+    <table class="print-job-table" role="table">
+      <thead>
+        <tr>
+          <th scope="col" [attr.aria-sort]="ariaSort('name')">
+            <button type="button" class="print-job-table__sort" (click)="setSort('name')" [class.is-active]="isSorted('name')">
+              <span>Print</span>
+              <span class="print-job-table__sort-icon" aria-hidden="true">{{ sortIcon('name') }}</span>
+            </button>
+          </th>
+          <th scope="col" [attr.aria-sort]="ariaSort('date')">
+            <button type="button" class="print-job-table__sort" (click)="setSort('date')" [class.is-active]="isSorted('date')">
+              <span>Printed on</span>
+              <span class="print-job-table__sort-icon" aria-hidden="true">{{ sortIcon('date') }}</span>
+            </button>
+          </th>
+          <th scope="col" [attr.aria-sort]="ariaSort('duration')">
+            <button type="button" class="print-job-table__sort" (click)="setSort('duration')" [class.is-active]="isSorted('duration')">
+              <span>Duration</span>
+              <span class="print-job-table__sort-icon" aria-hidden="true">{{ sortIcon('duration') }}</span>
+            </button>
+          </th>
+          <th scope="col">Spools used</th>
+          <th scope="col">Energy</th>
+          <th scope="col" [attr.aria-sort]="ariaSort('cost')">
+            <button type="button" class="print-job-table__sort" (click)="setSort('cost')" [class.is-active]="isSorted('cost')">
+              <span>Costs</span>
+              <span class="print-job-table__sort-icon" aria-hidden="true">{{ sortIcon('cost') }}</span>
+            </button>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let job of sortedPrintJobs(); trackBy: trackByPrintJob">
+          <td data-label="Print">
+            <p class="print-job-table__name">{{ job.name }}</p>
+            <a *ngIf="job.fileLink" class="print-job-table__link" [href]="job.fileLink" target="_blank" rel="noopener">File</a>
+          </td>
+          <td data-label="Printed on">
+            <p class="print-job-table__metric">{{ formatDate(job.printDate) }}</p>
+          </td>
+          <td data-label="Duration">
+            <p class="print-job-table__metric">{{ formatDuration(job.duration) }}</p>
+          </td>
+          <td data-label="Spools used">
+            <p class="print-job-table__metric">{{ spoolLabel(job) }}</p>
+            <ul class="print-job-table__spools" *ngIf="spoolCount(job) > 0">
+              <li *ngFor="let usage of job.printJobSpool">
+                <span class="print-job-table__badge">#{{ usage.spoolId }}</span>
+                <span class="print-job-table__spool-name">
+                  {{ usage.spool?.filament?.name || usage.spool?.filament?.brand?.name || 'Spool' }}
+                </span>
+                <span class="print-job-table__spool-grams">{{ usage.gramsUsed | number : '1.0-0' }} g</span>
+              </li>
+            </ul>
+          </td>
+          <td data-label="Energy">
+            <p class="print-job-table__metric">{{ job.energyKwh ?? '—' }} kWh</p>
+            <p class="print-job-table__metric-hint" *ngIf="job.energyCost">
+              {{ formatCurrency(job.energyCost) }}
+            </p>
+          </td>
+          <td data-label="Costs">
+            <p class="print-job-table__metric">Filaments: {{ formatCurrency(job.totalFilamentCost) }}</p>
+            <p class="print-job-table__metric-hint">Total: {{ formatCurrency(job.totalCost) }}</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>

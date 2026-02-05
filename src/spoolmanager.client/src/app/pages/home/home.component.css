@@ -1,0 +1,195 @@
+.home-hero {
+  background: radial-gradient(circle at top right, color-mix(in srgb, var(--color-accent-warm), var(--color-panel) 65%), var(--color-panel));
+  border-radius: 1.5rem;
+  padding: 2.5rem;
+  box-shadow: var(--color-shadow);
+  border: 1px solid var(--color-border);
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.home-hero__eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin: 0 0 0.75rem;
+}
+
+.home-hero h1 {
+  font-size: clamp(2.25rem, 5vw, 3.25rem);
+  margin: 0 0 0.75rem;
+  color: var(--color-text);
+}
+
+.home-hero p {
+  color: var(--color-text-muted);
+  font-size: 1.05rem;
+  line-height: 1.65;
+  margin: 0;
+}
+
+.home-hero__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: flex-end;
+}
+
+.home-hero__actions button,
+.home-hero__actions a {
+  border-radius: 999px;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.home-hero__actions button {
+  background: var(--button-primary-bg);
+  color: var(--button-primary-text);
+  border: 1px solid transparent;
+  box-shadow: 0 12px 22px rgba(33, 79, 208, 0.25);
+}
+
+.home-hero__actions a {
+  background: var(--button-secondary-bg);
+  color: var(--button-secondary-text);
+  border: 1px solid var(--button-ghost-border);
+}
+
+.home-dashboard {
+  margin-top: 2rem;
+}
+
+.home-status {
+  padding: 1rem 1.25rem;
+  border-radius: 1rem;
+  background: var(--color-panel-muted);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+}
+
+.home-status--error {
+  background: color-mix(in srgb, var(--color-accent-hot), transparent 70%);
+  color: var(--color-accent-hot);
+  border-color: color-mix(in srgb, var(--color-accent-hot), var(--color-ink-deep) 20%);
+}
+
+.home-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 1.5rem;
+}
+
+.home-card {
+  padding: 1.75rem;
+  border-radius: 1.25rem;
+  box-shadow: var(--color-shadow);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  background: var(--color-panel);
+}
+
+
+.home-card__label,
+.home-card__hint {
+  color: color-mix(in srgb, currentColor 75%, var(--color-panel-muted));
+}
+
+.home-card__label {
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  font-size: 0.75rem;
+  margin: 0 0 0.5rem;
+}
+
+.home-card__value {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 700;
+}
+
+.home-card__hint {
+  margin: 0.35rem 0 0;
+}
+
+.home-card--spools {
+  background: linear-gradient(
+    160deg,
+    var(--color-primary),
+    color-mix(in srgb, var(--color-primary), var(--color-nav-text) 35%)
+  );
+  color: var(--button-primary-text);
+  border-color: color-mix(in srgb, var(--color-primary), transparent 50%);
+}
+
+.home-card--prints {
+  background: linear-gradient(
+    160deg,
+    var(--color-accent-hot),
+    color-mix(in srgb, var(--color-accent-hot), var(--color-nav-text) 40%)
+  );
+  color: var(--button-primary-text);
+  border-color: color-mix(in srgb, var(--color-accent-hot), transparent 45%);
+}
+
+.home-card--filaments {
+  background: linear-gradient(
+    160deg,
+    var(--color-success),
+    color-mix(in srgb, var(--color-success), var(--color-nav-text) 45%)
+  );
+  color: color-mix(in srgb, var(--color-ink-deep) 80%, var(--color-success));
+  border-color: color-mix(in srgb, var(--color-success), transparent 50%);
+}
+
+.home-card--brands {
+  background: linear-gradient(
+    160deg,
+    var(--color-accent-warm),
+    color-mix(in srgb, var(--color-accent-warm), var(--color-nav-text) 35%)
+  );
+  color: color-mix(in srgb, var(--color-ink-deep) 80%, var(--color-accent-warm));
+  border-color: color-mix(in srgb, var(--color-accent-warm), transparent 50%);
+}
+
+.home-tips {
+  margin-top: 2rem;
+}
+
+.home-tips article {
+  padding: 2rem;
+  border-radius: 1.25rem;
+  background: var(--color-panel);
+  box-shadow: var(--color-shadow);
+  border: 1px solid var(--color-border);
+}
+
+.home-tips h2 {
+  margin: 0 0 1rem;
+}
+
+.home-tips ul {
+  margin: 0 0 1.25rem;
+  padding-left: 1.2rem;
+  color: var(--color-text-muted);
+}
+
+.home-tips a {
+  font-weight: 600;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  .home-hero {
+    flex-direction: column;
+  }
+
+  .home-hero__actions {
+    align-items: flex-start;
+  }
+}

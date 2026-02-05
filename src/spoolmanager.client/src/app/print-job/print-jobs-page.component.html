@@ -1,0 +1,17 @@
+<section class="print-jobs-page">
+  <app-breadcrumb [items]="breadcrumbItems"></app-breadcrumb>
+
+  <header class="print-jobs-page__header">
+    <div>
+      <p class="print-jobs-page__eyebrow">Production</p>
+      <h1>Prints</h1>
+      <p>Review recent runs, understand material consumption, and keep costs under control.</p>
+    </div>
+    <div class="print-jobs-page__actions">
+      <a routerLink="/spools" class="print-jobs-page__action print-jobs-page__action--ghost">Spools</a>
+      <a routerLink="/print-jobs/add" class="print-jobs-page__action print-jobs-page__action--primary">Register Print</a>
+    </div>
+  </header>
+
+  <app-print-job-list></app-print-job-list>
+</section>

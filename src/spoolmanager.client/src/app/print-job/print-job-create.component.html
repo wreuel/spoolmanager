@@ -1,0 +1,170 @@
+<section class="print-job-create">
+  <!-- <header class="print-job-create__header">
+    <div>
+      <p class="print-job-create__eyebrow">Register print job</p>
+      <h2>Print Details</h2>
+      <p>Describe the job, execution date, and consumptions to maintain accurate analytics.</p>
+    </div>
+  </header> -->
+
+  <form class="print-job-form" [formGroup]="printJobForm" (ngSubmit)="submit()" novalidate>
+    <article class="print-job-card print-job-card--stacked">
+      <section class="print-job-section">
+        <header>
+          <h3>Identification</h3>
+          <p>Job name, date, and link to the file used.</p>
+        </header>
+        <div class="print-job-form__grid">
+          <label class="print-job-form__field" for="print-job-name">
+            <span>Name</span>
+            <input id="print-job-name" type="text" formControlName="name" placeholder="Ex. Benchy test" />
+            <small class="print-job-form__error" *ngIf="printJobForm.controls.name.invalid && (printJobForm.controls.name.dirty || printJobForm.controls.name.touched)">
+              Please enter at least 2 characters.
+            </small>
+          </label>
+          <label class="print-job-form__field print-job-date-field">
+            <span>Date</span>
+            <div
+              class="print-job-date-field__control"
+              role="button"
+              tabindex="0"
+              (click)="openDatePicker(printJobDateNative)"
+              (keydown)="handleDateControlKeydown($event, printJobDateNative)"
+            >
+              <input
+                type="text"
+                class="print-job-date-field__display"
+                placeholder="dd/MM/yyyy"
+                [value]="formatDisplayDate(printJobForm.controls.printDate.value)"
+                readonly
+              />
+              <span class="print-job-date-field__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                  <path d="M7 2v2H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2V2h-2v2H9V2H7zm12 7H5v10h14z" />
+                </svg>
+              </span>
+            </div>
+            <input
+              #printJobDateNative
+              id="print-job-date"
+              type="date"
+              class="print-job-date-field__native"
+              formControlName="printDate"
+              tabindex="-1"
+              aria-hidden="true"
+            />
+          </label>
+          <label class="print-job-form__field" for="print-job-file">
+            <span>File (URL)</span>
+            <input id="print-job-file" type="url" formControlName="fileLink" placeholder="https://" />
+          </label>
+        </div>
+      </section>
+
+      <section class="print-job-section">
+        <header>
+          <h3>Duration and Energy</h3>
+          <p>How many hours and minutes it took, plus energy costs if available.</p>
+        </header>
+        <div class="print-job-form__grid print-job-form__grid--four">
+          <label class="print-job-form__field">
+            <span>Hours</span>
+            <input type="number" min="0" formControlName="hoursDuration" />
+          </label>
+          <label class="print-job-form__field">
+            <span>Minutes</span>
+            <input type="number" min="0" max="59" formControlName="minutesDuration" />
+          </label>
+          <label class="print-job-form__field">
+            <span>Energy (kWh)</span>
+            <input type="number" min="0" step="0.01" formControlName="energyKwh" />
+          </label>
+          <label class="print-job-form__field">
+            <span>Energy (US$)</span>
+            <input type="number" min="0" step="0.01" formControlName="energyCost" />
+          </label>
+        </div>
+      </section>
+
+      <section class="print-job-section">
+        <header>
+          <h3>Spool Consumption</h3>
+          <p>Associate the spools used and indicate the grams consumed in each one.</p>
+        </header>
+
+        <div class="print-job-spools__toolbar">
+          <!-- <input
+            type="search"
+            class="print-job-spools__search"
+            placeholder="Buscar bobinas por nome, marca ou ID"
+            (input)="updateSpoolSearch($any($event.target).value)"
+          /> -->
+          <button type="button" class="print-job-spools__add" (click)="addSpoolUsage()">+ Add Spool</button>
+        </div>
+
+        <p class="print-job-spools__status" *ngIf="spoolStatus() === 'loading'">Loading spools…</p>
+        <p class="print-job-spools__status print-job-spools__status--error" *ngIf="spoolStatus() === 'error'">
+          Unable to load spools.
+        </p>
+
+        <div class="print-job-spools" formArrayName="spools">
+          <article
+            class="print-job-spool"
+            *ngFor="let usage of spoolArray.controls; let i = index"
+            [formGroupName]="i"
+          >
+            <div class="print-job-spool__row">
+              <label class="print-job-form__field">
+                <span>Spool</span>
+                <select formControlName="spoolId">
+                  <option value="">Select a spool</option>
+                  <option *ngFor="let spool of availableSpools()" [ngValue]="spool.id">
+                    {{ displaySpoolLabel(spool) }}
+                  </option>
+                </select>
+                <small
+                  class="print-job-form__error"
+                  *ngIf="usage.get('spoolId')?.invalid && (usage.get('spoolId')?.dirty || usage.get('spoolId')?.touched)"
+                >
+                  Choose a spool.
+                </small>
+              </label>
+              <label class="print-job-form__field print-job-form__field--grams">
+                <span>Grams used</span>
+                <input type="number" min="1" step="1" formControlName="gramsUsed" />
+              </label>
+            </div>
+            <button type="button" class="print-job-spool__remove" (click)="removeSpoolUsage(i)">
+              Remove
+            </button>
+          </article>
+        </div>
+      </section>
+
+      <section class="print-job-section print-job-section--feedback">
+        <p class="print-job-form__status print-job-form__status--error" *ngIf="status() === 'error'">{{ errorMessage() }}</p>
+        <p class="print-job-form__status print-job-form__status--success" *ngIf="status() === 'success'">Print saved successfully.</p>
+
+        <div class="print-job-form__actions">
+          <button type="button" class="print-job-form__action print-job-form__action--ghost" (click)="cancel()" [disabled]="status() === 'saving'"
+          routerLink="/print-jobs" aria-label="Return to print job list">
+            Cancel
+          </button>
+          <button
+            type="button"
+            class="print-job-form__action print-job-form__action--secondary"
+            (click)="submit(true)"
+            [disabled]="printJobForm.invalid || status() === 'saving'"
+          >
+            Save and add another
+          </button>
+          <button type="submit" class="print-job-form__action print-job-form__action--primary" [disabled]="printJobForm.invalid || status() === 'saving'">
+            <span *ngIf="status() === 'saving'">Saving…</span>
+            <span *ngIf="status() !== 'saving'">Save job</span>
+          </button>
+        </div>
+      </section>
+    </article>
+  </form>
+</section>
+

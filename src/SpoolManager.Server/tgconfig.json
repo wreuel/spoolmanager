@@ -1,0 +1,15 @@
+{
+  "generationSpecs": [ "MyGenerationSpec" ],
+  "customTypeMappings": {
+    "System.TimeSpan": "string",
+    "Microsoft.AspNetCore.Http.IFormFile": "Blob",
+    "System.Object": null,
+    
+    "System.DateTimeOffset": "string",
+    "number | null": "number | null"
+  },
+  "typeUnionsForTypes": {
+    "number": [ "null", "undefined" ]
+  },
+  "tabLength": 4
+}

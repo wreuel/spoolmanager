@@ -1,0 +1,106 @@
+<section class="brand-table-card">
+  <header class="brand-table-card__header">
+    <div>
+      <p class="brand-table-card__eyebrow">Directory</p>
+      <h2>Brands</h2>
+    </div>
+    <button type="button" class="brand-table-card__refresh" (click)="refresh()" [disabled]="listStatus() === 'loading'">
+      Refresh
+    </button>
+  </header>
+
+  <div class="brand-table__state" *ngIf="listStatus() === 'loading'">
+    Loading brands…
+  </div>
+
+  <div class="brand-table__state brand-table__state--error" *ngIf="listStatus() === 'error'">
+    {{ listError() }}
+  </div>
+
+  <div class="brand-table__state" *ngIf="listStatus() === 'ready' && brands().length === 0">
+    No brands registered yet.
+  </div>
+
+  <div class="brand-table__wrapper" *ngIf="brands().length > 0">
+    <table class="brand-table" role="table">
+      <thead>
+        <tr>
+          <th scope="col">
+            <button type="button" (click)="changeSort('id')" class="brand-table__sorter">
+              <span>ID</span>
+              <span class="brand-table__sorter-icons">
+                <svg viewBox="0 0 1024 1024" [class.is-active]="isSortActive('id', 'asc')">
+                  <path [attr.d]="sortIndicator('asc')"></path>
+                </svg>
+                <svg viewBox="0 0 1024 1024" [class.is-active]="isSortActive('id', 'desc')">
+                  <path [attr.d]="sortIndicator('desc')"></path>
+                </svg>
+              </span>
+            </button>
+          </th>
+          <th scope="col">
+            <button type="button" (click)="changeSort('name')" class="brand-table__sorter">
+              <span>Name</span>
+              <span class="brand-table__sorter-icons">
+                <svg viewBox="0 0 1024 1024" [class.is-active]="isSortActive('name', 'asc')">
+                  <path [attr.d]="sortIndicator('asc')"></path>
+                </svg>
+                <svg viewBox="0 0 1024 1024" [class.is-active]="isSortActive('name', 'desc')">
+                  <path [attr.d]="sortIndicator('desc')"></path>
+                </svg>
+              </span>
+            </button>
+          </th>
+          <th scope="col">Filaments</th>
+          <th scope="col" class="brand-table__actions-col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let brand of brands(); trackBy: trackByBrand" [class.is-editing]="isEditing(brand)">
+          <td data-label="ID">{{ brand.id }}</td>
+          <td data-label="Name">
+            <ng-container *ngIf="!isEditing(brand); else editName">
+              {{ brand.name }}
+            </ng-container>
+            <ng-template #editName>
+              <div class="brand-table__edit-field" [formGroup]="editForm">
+                <input
+                  id="brand-edit-name-{{ brand.id }}"
+                  type="text"
+                  formControlName="name"
+                  [attr.aria-invalid]="editForm.controls.name.invalid && (editForm.controls.name.dirty || editForm.controls.name.touched)"
+                  autocomplete="organization"
+                />
+                <div class="brand-table__error" *ngIf="editForm.controls.name.invalid && (editForm.controls.name.dirty || editForm.controls.name.touched)">
+                  <span *ngIf="editForm.controls.name.errors?.['required']">Required</span>
+                  <span *ngIf="editForm.controls.name.errors?.['minlength']">Min 2 characters</span>
+                </div>
+              </div>
+            </ng-template>
+          </td>
+          <td data-label="Filaments">
+            <span class="brand-table__badge">{{ brand.filaments?.length ?? 0 }}</span>
+          </td>
+          <td data-label="Actions" class="brand-table__actions">
+            <ng-container *ngIf="!isEditing(brand); else editActions">
+              <button type="button" (click)="startEdit(brand)">Edit</button>
+            </ng-container>
+            <ng-template #editActions>
+              <div class="brand-table__edit-actions" [formGroup]="editForm">
+                <button type="button" (click)="saveEdit()" [disabled]="editStatus() === 'saving'">
+                  <span *ngIf="editStatus() === 'saving'">Saving…</span>
+                  <span *ngIf="editStatus() !== 'saving'">Save</span>
+                </button>
+                <button type="button" (click)="cancelEdit()" [disabled]="editStatus() === 'saving'">Cancel</button>
+              </div>
+            </ng-template>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="brand-table__edit-feedback" *ngIf="editError()">
+      {{ editError() }}
+    </div>
+  </div>
+</section>

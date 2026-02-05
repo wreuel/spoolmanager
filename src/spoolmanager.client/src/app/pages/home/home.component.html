@@ -1,0 +1,33 @@
+<section class="home-hero">
+  <div>
+    <p class="home-hero__eyebrow">Spool Manager</p>
+    <h1>Operations overview</h1>
+    <p>
+      Monitor the health of your inventory and jump directly into the areas that need attention. Counts refresh from the
+      live database so you always know what is registered.
+    </p>
+  </div>
+  <div class="home-hero__actions">
+    <button type="button" (click)="refresh()">Refresh data</button>
+    <!-- <a routerLink="/brands">Manage brands</a> -->
+  </div>
+</section>
+
+<section class="home-dashboard">
+  <div class="home-status" *ngIf="status() === 'loading'">
+    Loading latest summary…
+  </div>
+
+  <div class="home-status home-status--error" *ngIf="status() === 'error'">
+    {{ errorMessage() }}
+  </div>
+
+  <div class="home-cards" *ngIf="status() === 'ready'">
+    <article class="home-card" *ngFor="let metric of metrics()" [class]="'home-card home-card--' + metric.accent"
+      routerLink="{{ metric.route }}">
+      <p class="home-card__label">{{ metric.label }}</p>
+      <p class="home-card__value">{{ metric.value }}</p>
+      <p class="home-card__hint">Total tracked</p>
+    </article>
+  </div>
+</section>

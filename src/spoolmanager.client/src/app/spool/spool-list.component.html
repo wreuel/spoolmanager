@@ -1,0 +1,272 @@
+<section class="spool-table-card">
+  <header class="spool-table-card__header">
+    <div>
+      <p class="spool-table-card__eyebrow">Inventory</p>
+      <h2>Registered spools</h2>
+      <p>Keep the catalog synchronized with SpoolMan and update prices, weights, and batches without leaving the list.</p>
+    </div>
+    <div class="spool-table-card__actions">
+      <button
+        type="button"
+        class="spool-table-card__filter"
+        [class.is-active]="onlyAvailable()"
+        (click)="toggleRemainingFilter()"
+        [attr.aria-pressed]="onlyAvailable()"
+      >
+        <span *ngIf="!onlyAvailable()">Show remaining &gt; 0</span>
+        <span *ngIf="onlyAvailable()">Show all spools</span>
+      </button>
+      <button type="button" class="spool-table-card__refresh" (click)="refresh()" [disabled]="listStatus() === 'loading'">
+        Refresh
+      </button>
+    </div>
+  </header>
+
+  <div class="spool-table__state" *ngIf="listStatus() === 'loading'">
+    Loading spools…
+  </div>
+
+  <div class="spool-table__state spool-table__state--error" *ngIf="listStatus() === 'error'">
+    {{ listError() }}
+  </div>
+
+  <div class="spool-table__state" *ngIf="listStatus() === 'ready' && spools().length === 0">
+    No spools have been registered yet.
+  </div>
+
+  <div class="spool-table__wrapper" *ngIf="spools().length > 0">
+    <table class="spool-table" role="table">
+      <thead>
+        <tr>
+          <th scope="col">
+            <button type="button" (click)="changeSort('id')" class="spool-table__sorter">
+              <span>ID</span>
+              <span class="spool-table__sorter-icons">
+                <svg viewBox="0 0 1024 1024" [class.is-active]="isSortActive('id', 'asc')">
+                  <path [attr.d]="sortIndicator('asc')"></path>
+                </svg>
+                <svg viewBox="0 0 1024 1024" [class.is-active]="isSortActive('id', 'desc')">
+                  <path [attr.d]="sortIndicator('desc')"></path>
+                </svg>
+              </span>
+            </button>
+          </th>
+          <th scope="col">Filament</th>
+          <th scope="col">Color</th>
+          <th scope="col">
+            <button type="button" (click)="changeSort('material')" class="spool-table__sorter">
+              <span>Material</span>
+              <span class="spool-table__sorter-icons">
+                <svg viewBox="0 0 1024 1024" [class.is-active]="isSortActive('material', 'asc')">
+                  <path [attr.d]="sortIndicator('asc')"></path>
+                </svg>
+                <svg viewBox="0 0 1024 1024" [class.is-active]="isSortActive('material', 'desc')">
+                  <path [attr.d]="sortIndicator('desc')"></path>
+                </svg>
+              </span>
+            </button>
+          </th>
+          <th scope="col">Batch</th>
+          <th scope="col">
+            <button type="button" (click)="changeSort('remaining')" class="spool-table__sorter">
+              <span>Remaining Weight</span>
+              <span class="spool-table__sorter-icons">
+                <svg viewBox="0 0 1024 1024" [class.is-active]="isSortActive('remaining', 'asc')">
+                  <path [attr.d]="sortIndicator('asc')"></path>
+                </svg>
+                <svg viewBox="0 0 1024 1024" [class.is-active]="isSortActive('remaining', 'desc')">
+                  <path [attr.d]="sortIndicator('desc')"></path>
+                </svg>
+              </span>
+            </button>
+          </th>
+          <th scope="col">
+            <button type="button" (click)="changeSort('price')" class="spool-table__sorter">
+              <span>Price</span>
+              <span class="spool-table__sorter-icons">
+                <svg viewBox="0 0 1024 1024" [class.is-active]="isSortActive('price', 'asc')">
+                  <path [attr.d]="sortIndicator('asc')"></path>
+                </svg>
+                <svg viewBox="0 0 1024 1024" [class.is-active]="isSortActive('price', 'desc')">
+                  <path [attr.d]="sortIndicator('desc')"></path>
+                </svg>
+              </span>
+            </button>
+          </th>
+          <th scope="col">
+            <button type="button" (click)="changeSort('registered')" class="spool-table__sorter">
+              <span>Registered on</span>
+              <span class="spool-table__sorter-icons">
+                <svg viewBox="0 0 1024 1024" [class.is-active]="isSortActive('registered', 'asc')">
+                  <path [attr.d]="sortIndicator('asc')"></path>
+                </svg>
+                <svg viewBox="0 0 1024 1024" [class.is-active]="isSortActive('registered', 'desc')">
+                  <path [attr.d]="sortIndicator('desc')"></path>
+                </svg>
+              </span>
+            </button>
+          </th>
+          <th scope="col">
+            <button type="button" (click)="changeSort('firstUsed')" class="spool-table__sorter">
+              <span>First use</span>
+              <span class="spool-table__sorter-icons">
+                <svg viewBox="0 0 1024 1024" [class.is-active]="isSortActive('firstUsed', 'asc')">
+                  <path [attr.d]="sortIndicator('asc')"></path>
+                </svg>
+                <svg viewBox="0 0 1024 1024" [class.is-active]="isSortActive('firstUsed', 'desc')">
+                  <path [attr.d]="sortIndicator('desc')"></path>
+                </svg>
+              </span>
+            </button>
+          </th>
+          <th scope="col">
+            <button type="button" (click)="changeSort('lastUsed')" class="spool-table__sorter">
+              <span>Last use</span>
+              <span class="spool-table__sorter-icons">
+                <svg viewBox="0 0 1024 1024" [class.is-active]="isSortActive('lastUsed', 'asc')">
+                  <path [attr.d]="sortIndicator('asc')"></path>
+                </svg>
+                <svg viewBox="0 0 1024 1024" [class.is-active]="isSortActive('lastUsed', 'desc')">
+                  <path [attr.d]="sortIndicator('desc')"></path>
+                </svg>
+              </span>
+            </button>
+          </th>
+          <th scope="col">Location</th>
+          <th scope="col" class="spool-table__actions-col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let spool of spools(); trackBy: trackBySpool" [class.is-editing]="isEditing(spool)">
+          <td data-label="ID">{{ spool.id }}</td>
+          <td data-label="Filament">
+            <div class="spool-table__filament">
+              <p class="spool-table__filament-name">{{ spool.showName ?? 'No manufacturer' }}</p>
+              <p class="spool-table__filament-meta">
+                {{ spool.filament?.name ?? '—' }}
+                <span *ngIf="spool.filament?.externalId">&middot; #{{ spool.filament?.externalId }}</span>
+              </p>
+            </div>
+          </td>
+          <td data-label="Name &amp; color">
+            <div class="spool-table__colorway">
+              <div class="spool-table__colorway-head">
+                <small class="spool-table__colorway-note" *ngIf="spoolColorDirection(spool)">
+                  {{ spoolColorDirection(spool) }}
+                </small>
+              </div>
+              <ng-container *ngIf="spoolColorPalette(spool) as colors">
+                <div class="spool-table__swatches" *ngIf="colors.length > 0; else noColor">
+                  <span
+                    *ngFor="let color of colors; let i = index"
+                    class="spool-table__swatch"
+                    [style.backgroundColor]="color"
+                    [attr.aria-label]="'Color ' + (i + 1)"
+                  ></span>
+                </div>
+              </ng-container>
+              <ng-template #noColor>
+                <small class="spool-table__colorway-note">No color registered</small>
+              </ng-template>
+            </div>
+          </td>
+          <td data-label="Material">
+            <p class="spool-table__metric">{{ spoolMaterialSummary(spool) }}</p>
+            <p class="spool-table__metric-hint" *ngIf="spoolMaterialSpecs(spool) as specs">{{ specs }}</p>
+          </td>
+          <td data-label="Lote">
+            <ng-container *ngIf="!isEditing(spool); else editLot">
+              <p class="spool-table__lot">{{ spool.lotNumber || '—' }}</p>
+              <p class="spool-table__comment" *ngIf="spool.comment">{{ spool.comment }}</p>
+            </ng-container>
+            <ng-template #editLot>
+              <div class="spool-table__edit-stack" [formGroup]="editForm">
+                <input type="text" formControlName="lotNumber" placeholder="Lote" />
+                <textarea
+                  rows="2"
+                  formControlName="comment"
+                  placeholder="Observações"
+                ></textarea>
+              </div>
+            </ng-template>
+          </td>
+          <td data-label="Gramas">
+            <ng-container *ngIf="!isEditing(spool); else editWeight">
+              <p class="spool-table__metric">{{ remaining(spool) | number : '1.0-0' }} g</p>
+              <p class="spool-table__metric-hint">de {{ spool.initialWeight | number : '1.0-0' }} g</p>
+            </ng-container>
+            <ng-template #editWeight>
+              <div class="spool-table__edit-field" [formGroup]="editForm">
+                <label for="spool-initial-weight">Peso inicial</label>
+                <input id="spool-initial-weight" type="number" formControlName="initialWeight" min="1" step="1" />
+              </div>
+            </ng-template>
+          </td>
+          <td data-label="Preço">
+            <ng-container *ngIf="!isEditing(spool); else editPrice">
+              <p class="spool-table__metric">{{ formatCurrency(spool.price) }}</p>
+              <p class="spool-table__metric-hint">{{ (spool.costPerGram ?? spool.price / spool.initialWeight) | number : '1.2-2' }} / g</p>
+            </ng-container>
+            <ng-template #editPrice>
+              <div class="spool-table__edit-field" [formGroup]="editForm">
+                <label for="spool-price">Preço</label>
+                <input id="spool-price" type="number" formControlName="price" min="0" step="0.01" />
+              </div>
+            </ng-template>
+          </td>
+          <td data-label="Registrada em">
+            <p class="spool-table__metric">{{ formatDate(spool.registered) }}</p>
+          </td>
+          <td data-label="Primeiro uso">
+            <ng-container *ngIf="!isEditing(spool); else editFirstUsed">
+              <p class="spool-table__metric">{{ formatDate(spool.firstUsed) }}</p>
+            </ng-container>
+            <ng-template #editFirstUsed>
+              <div class="spool-table__edit-field" [formGroup]="editForm">
+                <label for="spool-first-used-{{ spool.id }}">Primeiro uso</label>
+                <input id="spool-first-used-{{ spool.id }}" type="date" formControlName="firstUsed" />
+              </div>
+            </ng-template>
+          </td>
+          <td data-label="Último uso">
+            <ng-container *ngIf="!isEditing(spool); else editLastUsed">
+              <p class="spool-table__metric">{{ formatDate(spool.lastUsed) }}</p>
+            </ng-container>
+            <ng-template #editLastUsed>
+              <div class="spool-table__edit-field" [formGroup]="editForm">
+                <label for="spool-last-used-{{ spool.id }}">Último uso</label>
+                <input id="spool-last-used-{{ spool.id }}" type="date" formControlName="lastUsed" />
+              </div>
+            </ng-template>
+          </td>
+          <td data-label="Local">
+            <ng-container *ngIf="!isEditing(spool); else editLocation">
+              <p class="spool-table__metric">{{ spool.location || '—' }}</p>
+            </ng-container>
+            <ng-template #editLocation>
+              <div class="spool-table__edit-field" [formGroup]="editForm">
+                <label for="spool-location">Local</label>
+                <input id="spool-location" type="text" formControlName="location" />
+              </div>
+            </ng-template>
+          </td>
+          <td data-label="Ações" class="spool-table__actions">
+            <ng-container *ngIf="!isEditing(spool); else editActions">
+              <button type="button" (click)="startEdit(spool)">Edit</button>
+            </ng-container>
+            <ng-template #editActions>
+              <div class="spool-table__edit-actions" [formGroup]="editForm">
+                <button type="button" (click)="saveEdit()" [disabled]="editStatus() === 'saving'">
+                  <span *ngIf="editStatus() === 'saving'">Saving…</span>
+                  <span *ngIf="editStatus() !== 'saving'">Save</span>
+                </button>
+                <button type="button" (click)="cancelEdit()" [disabled]="editStatus() === 'saving'">Cancel</button>
+              </div>
+              <p class="spool-table__edit-feedback" *ngIf="editError()">{{ editError() }}</p>
+            </ng-template>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>

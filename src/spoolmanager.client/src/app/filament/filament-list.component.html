@@ -1,0 +1,93 @@
+<section class="filament-table-card">
+  <header class="filament-table-card__header">
+    <div>
+      <p class="filament-table-card__eyebrow">Catalog</p>
+      <h2>Filaments</h2>
+      <p>Quickly visualize materials, color combinations, and recommended parameters.</p>
+    </div>
+
+    <div class="filament-table-card__actions">
+      <div class="filament-table-card__filters" role="group" aria-label="Filter by color type">
+        <button type="button" [class.is-active]="colorFilter() === 'all'" (click)="setColorFilter('all')">All</button>
+        <button type="button" [class.is-active]="colorFilter() === 'single'" (click)="setColorFilter('single')">Single</button>
+        <button type="button" [class.is-active]="colorFilter() === 'multi'" (click)="setColorFilter('multi')">Multi</button>
+      </div>
+      <button type="button" class="filament-table-card__refresh" (click)="refresh()" [disabled]="status() === 'loading'">
+        Refresh
+      </button>
+    </div>
+  </header>
+
+  <div class="filament-table__state" *ngIf="status() === 'loading'">Loading filaments…</div>
+  <div class="filament-table__state filament-table__state--error" *ngIf="status() === 'error'">{{ errorMessage() }}</div>
+  <div class="filament-table__state" *ngIf="status() === 'ready' && filteredFilaments().length === 0">No filaments registered yet.</div>
+
+  <div class="filament-table__wrapper" *ngIf="status() === 'ready' && filteredFilaments().length > 0">
+    <table class="filament-table" role="table">
+      <thead>
+        <tr>
+          <th scope="col">Filament</th>
+          <th scope="col">Color</th>
+          <th scope="col">Specifications</th>
+          <th scope="col">Temperatures</th>
+          <th scope="col">Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let filament of filteredFilaments(); trackBy: trackByFilament">
+          <td data-label="Filament">
+            <p class="filament-table__name">{{ filament.name }}</p>
+            <p class="filament-table__meta">
+              <span>{{ filament.brand?.name ?? '—' }}</span>
+              <span>&middot;</span>
+              <span>{{ filament.material }}</span>
+              <span *ngIf="filament.finish">&middot; {{ filament.finish }}</span>
+            </p>
+          </td>
+          <td data-label="Color">
+            <div class="filament-table__colorway">
+              <div class="filament-table__swatches">
+                <span
+                  *ngFor="let color of colorPalette(filament); let i = index"
+                  class="filament-table__swatch"
+                  [style.backgroundColor]="color"
+                  [attr.aria-label]="'Color ' + (i + 1)"
+                ></span>
+              </div>
+              <small class="filament-table__colorway-note" *ngIf="isMultiColor(filament)">
+                {{ filament.multiColorDirection || 'Multicolor' }}
+              </small>
+              <small class="filament-table__colorway-note" *ngIf="!isMultiColor(filament) && colorPalette(filament).length === 0">
+                No color defined
+              </small>
+            </div>
+          </td>
+          <td data-label="Specifications">
+            <ul class="filament-table__specs">
+              <li><span>Diameter</span><strong>{{ filament.diameter }} mm</strong></li>
+              <li><span>Density</span><strong>{{ filament.density }} g/cm³</strong></li>
+              <li><span>Weight</span><strong>{{ formattedWeight(filament.weightGrams) }}</strong></li>
+              <li><span>Spool</span><strong>{{ formattedWeight(filament.spoolWeightGrams) }}</strong></li>
+            </ul>
+          </td>
+          <td data-label="Temperatures">
+            <ul class="filament-table__temps">
+              <li>
+                <span>Extruder</span>
+                <strong>{{ formattedTemps(filament.settingsExtruderTemp) }}</strong>
+              </li>
+              <li>
+                <span>Bed</span>
+                <strong>{{ formattedTemps(filament.settingsBedTemp) }}</strong>
+              </li>
+            </ul>
+          </td>
+          <td data-label="Price">
+            <p class="filament-table__price">{{ formattedPrice(filament.price) }}</p>
+            <p class="filament-table__meta">Estimated cost: {{ formattedPrice(filament.cost) }}</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>

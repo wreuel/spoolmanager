@@ -1,0 +1,19 @@
+<section class="filament-add-page">
+  <app-breadcrumb [items]="breadcrumbItems"></app-breadcrumb>
+
+  <header class="filament-add-page__header">
+    <div>
+      <p class="filament-add-page__eyebrow">Add filament</p>
+      <h1>New Filament</h1>
+      <p>Configure the filament including all necessary attributes before putting it into production.</p>
+    </div>
+    <button type="button" class="filament-add-page__back" routerLink="/filaments" aria-label="Back">
+      <span aria-hidden="true">←</span>
+      Back to list
+    </button>
+  </header>
+
+  <div class="filament-add-page__card">
+    <app-filament-create></app-filament-create>
+  </div>
+</section>

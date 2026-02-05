@@ -1,0 +1,17 @@
+<section class="spools-page">
+  <app-breadcrumb [items]="breadcrumbItems"></app-breadcrumb>
+
+  <header class="spools-page__header">
+    <div>
+      <p class="spools-page__eyebrow">Inventory</p>
+      <h1>Spools in stock</h1>
+      <p>Monitor remaining weights, update batches, and track when each spool was last used.</p>
+    </div>
+    <div class="spools-page__actions">
+      <a routerLink="/filaments" class="spools-page__action spools-page__action--ghost">Filaments</a>
+      <a routerLink="/spools/add" class="spools-page__action spools-page__action--primary">Add spool</a>
+    </div>
+  </header>
+
+  <app-spool-list></app-spool-list>
+</section>

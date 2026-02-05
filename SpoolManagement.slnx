@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="src/spoolmanager.client/spoolmanager.client.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="src/SpoolManager.Server/SpoolManager.Server.csproj" />
+</Solution>

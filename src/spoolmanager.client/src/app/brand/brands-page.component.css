@@ -1,0 +1,74 @@
+.brands-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.brands-page__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem;
+  border-radius: 1.25rem;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--color-primary), var(--color-panel) 70%), var(--color-panel));
+  box-shadow: var(--color-shadow);
+  border: 1px solid var(--color-border);
+}
+
+.brands-page__eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin: 0 0 0.5rem;
+}
+
+.brands-page__header h1 {
+  margin: 0 0 0.5rem;
+  color: var(--color-text);
+}
+
+.brands-page__header p {
+  margin: 0;
+  color: var(--color-text-muted);
+  max-width: 32rem;
+}
+
+.brands-page__actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.brands-page__action {
+  border-radius: 999px;
+  padding: 0.75rem 1.35rem;
+  text-decoration: none;
+  font-weight: 600;
+  border: 1px solid transparent;
+}
+
+.brands-page__action--ghost {
+  border-color: var(--button-ghost-border);
+  color: var(--color-text);
+  background: transparent;
+}
+
+.brands-page__action--primary {
+  background: var(--button-primary-bg);
+  color: var(--button-primary-text);
+  box-shadow: 0 12px 22px rgba(33, 79, 208, 0.25);
+}
+
+@media (max-width: 768px) {
+  .brands-page__header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .brands-page__actions {
+    justify-content: flex-start;
+  }
+}
