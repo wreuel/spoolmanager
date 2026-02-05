@@ -34,10 +34,10 @@ jobs:
           Set-Content $path -Value $updated -Encoding UTF8
           
       - name: Install dependencies
-        run: dotnet restore
+        run: dotnet restore src/SpoolManager.Server/SpoolManager.Server.csproj
         
       - name: Build
-        run: dotnet build --configuration Release --no-restore
+        run:  dotnet build src/SpoolManager.Server/SpoolManager.Server.csproj --configuration Release --no-restore
       - name: Get short SHA and create version string
         id: version
         shell: pwsh
