@@ -58,7 +58,7 @@ jobs:
           echo "BuildVersion=$BuildVersion" >> $env:GITHUB_OUTPUT
 
       - name: Publish
-        run: dotnet publish --configuration Release --output ./publish --runtime win-x86 --p:Version="${{ steps.version.outputs.BuildVersion }}" --p:FileVersion="${{ steps.version.outputs.BuildVersion }}"
+        run: dotnet publish --configuration Release --runtime win-x86 --p:Version="${{ steps.version.outputs.BuildVersion }}" --p:FileVersion="${{ steps.version.outputs.BuildVersion }}"
 
       - name: Deploy to MonsterASP.NET via WebDeploy
         uses: rasmusbuchholdt/simply-web-deploy@2.1.0
