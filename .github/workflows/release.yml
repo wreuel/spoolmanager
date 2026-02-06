@@ -26,8 +26,8 @@ jobs:
         run: |
           $path = "src\SpoolManager.Server\appsettings.json"
           $content = Get-Content $path -Raw
-          $connectionString = "${{ secrets.MY_DATABASE_STRING }}"
-          $updated = $content -replace "MY_DATABASE_STRING", $connectionString
+          $connectionString = "${{ secrets.SQL_SERVER_DATABASE_STRING }}"
+          $updated = $content -replace "SQL_SERVER_DATABASE_STRING", $connectionString
           $audience = "${{ secrets.JWT_AUDIENCE }}"
           $updated = $updated -replace "JWT_ISSUER", $audience
           $updated = $updated -replace "JWT_AUDIENCE", $audience

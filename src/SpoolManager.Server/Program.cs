@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using SpoolManager.Server.Authorizations;
 using SpoolManager.Server.Domain;
+using SpoolManager.Server.Domain.DatabasesContexts;
 using SpoolManager.Server.Extensions;
 using SpoolManager.Server.External.Configuration;
 using SpoolManager.Server.External.Implementations;
@@ -11,10 +12,29 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
-builder.Services.AddDbContext<SpoolManagerDbContext>(options =>
+var provider = builder.Configuration["DatabaseProvider"];
+if (provider == "MySql")
 {
-    options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection")!);
-});
+    var cs = builder.Configuration.GetConnectionString("MySql")!;
+    builder.Services.AddDbContext<MySqlDbContext>(options =>
+        options.UseMySQL(cs, b => b.MigrationsAssembly(typeof(MySqlDbContext).Assembly.FullName)));
+
+    builder.Services.AddScoped<SpoolManagerDbContext>(sp =>
+        sp.GetRequiredService<MySqlDbContext>());
+}
+else if (provider == "SqlServer")
+{
+    var cs = builder.Configuration.GetConnectionString("SQLServer")!;
+    builder.Services.AddDbContext<SqlServerDbContext>(options =>
+        options.UseSqlServer(cs, b => b.MigrationsAssembly(typeof(SqlServerDbContext).Assembly.FullName)));
+
+    builder.Services.AddScoped<SpoolManagerDbContext>(sp =>
+        sp.GetRequiredService<SqlServerDbContext>());
+}
+else
+{
+    throw new InvalidOperationException("DatabaseProvider must be MySql or SqlServer");
+}
 
 // Configure SpoolManDb options
 builder.Services.Configure<SpoolManDbOptions>(
@@ -128,7 +148,6 @@ static async Task SeedDatabase(IServiceScope scope)
         if (!await roleManager.RoleExistsAsync(role))
             await roleManager.CreateAsync(new IdentityRole(role));
     }
-
 
     var appContext = scope.ServiceProvider.GetRequiredService<SpoolManagerDbContext>();
 }

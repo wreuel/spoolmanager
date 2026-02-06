@@ -2,17 +2,20 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SpoolManager.Server.Domain;
+using SpoolManager.Server.Domain.DatabasesContexts;
 
 #nullable disable
 
-namespace SpoolManager.Server.Domain.Migrations
+namespace SpoolManager.Server.Domain.Migrations.MySql
 {
-    [DbContext(typeof(SpoolManagerDbContext))]
-    partial class SpoolManagerDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(MySqlDbContext))]
+    [Migration("20260206144712_Initial_MySql")]
+    partial class Initial_MySql
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -322,11 +325,11 @@ namespace SpoolManager.Server.Domain.Migrations
 
                     b.Property<string>("SettingsBedTemp")
                         .IsRequired()
-                        .HasColumnType("json");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("SettingsExtruderTemp")
                         .IsRequired()
-                        .HasColumnType("json");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("SpoolType")
                         .IsRequired()

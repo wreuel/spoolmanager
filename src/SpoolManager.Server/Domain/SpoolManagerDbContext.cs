@@ -2,12 +2,13 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SpoolManager.Server.Domain.Entities;
+using System.Text.Json;
 
 namespace SpoolManager.Server.Domain
 {
     public class SpoolManagerDbContext : IdentityDbContext<ApplicationUser>
     {
-        public SpoolManagerDbContext(DbContextOptions<SpoolManagerDbContext> options)
+        public SpoolManagerDbContext(DbContextOptions options)
             : base(options)
         {
         }
@@ -26,7 +27,7 @@ namespace SpoolManager.Server.Domain
             modelBuilder.Entity<IdentityPasskeyData>(entity =>
             {
                 entity.HasNoKey();
-                
+
                 entity.Property(p => p.Transports)
                     .HasConversion(
                         v => System.Text.Json.JsonSerializer.Serialize(v, (System.Text.Json.JsonSerializerOptions)null),
@@ -42,16 +43,14 @@ namespace SpoolManager.Server.Domain
             modelBuilder.Entity<Filament>(entity =>
             {
                 entity.Property(f => f.SettingsExtruderTemp)
-                    .HasColumnType("json")
-                    .HasConversion(
-                        v => System.Text.Json.JsonSerializer.Serialize(v, (System.Text.Json.JsonSerializerOptions)null),
-                        v => System.Text.Json.JsonSerializer.Deserialize<List<int>>(v, (System.Text.Json.JsonSerializerOptions)null) ?? new List<int>());
+                .HasConversion(
+                    v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
+                    v => JsonSerializer.Deserialize<List<int>>(v, (JsonSerializerOptions)null) ?? new());
 
                 entity.Property(f => f.SettingsBedTemp)
-                    .HasColumnType("json")
                     .HasConversion(
-                        v => System.Text.Json.JsonSerializer.Serialize(v, (System.Text.Json.JsonSerializerOptions)null),
-                        v => System.Text.Json.JsonSerializer.Deserialize<List<int>>(v, (System.Text.Json.JsonSerializerOptions)null) ?? new List<int>());
+                        v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
+                        v => JsonSerializer.Deserialize<List<int>>(v, (JsonSerializerOptions)null) ?? new());
             });
 
             modelBuilder.Entity<PrintJobSpool>()

@@ -4,10 +4,10 @@ using MySql.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
-namespace SpoolManager.Server.Domain.Migrations
+namespace SpoolManager.Server.Domain.Migrations.MySql
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Initial_MySql : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -258,8 +258,8 @@ namespace SpoolManager.Server.Domain.Migrations
                     SpoolWeightGrams = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     SpoolType = table.Column<string>(type: "longtext", nullable: false),
                     Comment = table.Column<string>(type: "longtext", nullable: false),
-                    SettingsExtruderTemp = table.Column<string>(type: "json", nullable: false),
-                    SettingsBedTemp = table.Column<string>(type: "json", nullable: false),
+                    SettingsExtruderTemp = table.Column<string>(type: "longtext", nullable: false),
+                    SettingsBedTemp = table.Column<string>(type: "longtext", nullable: false),
                     ColorHex = table.Column<string>(type: "longtext", nullable: false),
                     ExternalId = table.Column<string>(type: "longtext", nullable: false),
                     MultiColorHexes = table.Column<string>(type: "longtext", nullable: false),
