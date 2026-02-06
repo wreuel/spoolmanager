@@ -29,6 +29,10 @@
     <Folder Include="Domain\Scripts\" />
     <Folder Include="Modules\" />
   </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\spoolmanager.client\spoolmanager.client.esproj" />
+	</ItemGroup>
+
 
 	<Target Name="CompileTypeScript" />
 	
